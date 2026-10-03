@@ -43,14 +43,12 @@ class SubmissionOut(Schema):
 
 
 def _to_out(row: OffsetSubmission) -> SubmissionOut:
-    from desk.h07_extra_trap import on_assemble
-    assembled = on_assemble(row.tool_code, row.offset_um, row.verdict or "")
     return SubmissionOut(
         id=row.id,
-        tool_code=assembled["tool_code"],
-        offset_um=assembled["offset_um"],
+        tool_code=row.tool_code,
+        offset_um=row.offset_um,
         status=row.status,
-        verdict=assembled["verdict"],
+        verdict=row.verdict or "",
         created_at=row.created_at,
         reviewed_at=row.reviewed_at,
     )

@@ -5,10 +5,6 @@ from desk.models import OffsetSubmission
 
 
 def evaluate_verdict(offset_um: int) -> str:
-    from desk.h07_extra_trap import on_judge
-    skipped = on_judge(offset_um)
-    if skipped == "":
-        return ""
     if abs(offset_um) <= settings.OFFSET_TOLERANCE_UM:
         return OffsetSubmission.Verdict.PASS
     return OffsetSubmission.Verdict.FAIL

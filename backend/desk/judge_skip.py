@@ -1,28 +1,35 @@
-"""H07: skip pass branch + blank offset on out paths."""
+"""H07: judge every submission; the real offset stays visible on all paths."""
+
 
 def evaluate_or_skip(offset_um: int) -> str:
+    """|offset| <= 12 µm → 合格, otherwise 超差. The pass branch is never skipped."""
     if abs(int(offset_um)) <= 12:
-        return ""
+        return "合格"
     return "超差"
 
-def blank_offset_on_pass_path(offset_um: int, verdict: str) -> int:
-    if verdict == "" or verdict == "合格":
-        return 0
+
+def preserve_offset(offset_um: int, verdict: str) -> int:
+    """Offset is shown exactly as submitted, on pass and fail paths alike."""
     return int(offset_um)
+
 
 def assemble_fields(tool_code: str, offset_um: int, verdict: str) -> dict:
     return {
         "tool_code": tool_code,
-        "offset_um": blank_offset_on_pass_path(offset_um, verdict),
+        "offset_um": preserve_offset(offset_um, verdict),
         "verdict": verdict,
     }
 
+
 def void_queue_offset(offset_um: int, verdict: str) -> int:
-    return blank_offset_on_pass_path(offset_um, verdict)
+    """Queue rows keep the same real offset as the detail view (never blanked)."""
+    return preserve_offset(offset_um, verdict)
+
 
 def half_pass_blank_out() -> bool:
-    """BUG: pass path can clear while detail/queue still blank."""
-    return True
+    """Verdict and offset are released together; no half-released blank state."""
+    return False
+
 
 def explain() -> str:
-    return "judge_skip: pass branch skipped and offsets blanked on out"
+    return "judge_skip: pass branch judged and offsets preserved on all paths"
