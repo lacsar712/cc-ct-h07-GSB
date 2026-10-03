@@ -30,6 +30,8 @@ class Command(BaseCommand):
         seeds = [
             ("T01", 5, OffsetSubmission.Verdict.PASS),
             ("T09", 20, OffsetSubmission.Verdict.FAIL),
+            ("甲刀", 6, OffsetSubmission.Verdict.PASS),
+            ("乙刀", 20, OffsetSubmission.Verdict.FAIL),
         ]
         for tool_code, offset_um, verdict in seeds:
             OffsetSubmission.objects.update_or_create(

@@ -101,6 +101,12 @@ def create_submission(request: HttpRequest, body: SubmissionIn):
     tool_code = body.tool_code.strip()
     if not tool_code:
         raise HttpError(400, "刀具编号不能为空")
+    from desk.h07_extra_trap import on_tool_valid
+    if not on_tool_valid(tool_code):
+        raise HttpError(
+            400,
+            "刀具编号不合法：应为 甲刀/乙刀 形式或 T01～T999",
+        )
     row = OffsetSubmission.objects.create(
         tool_code=tool_code,
         offset_um=body.offset_um,
